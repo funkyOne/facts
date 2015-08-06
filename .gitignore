@@ -1,4 +1,6 @@
 .idea/
+bin/
 node_modules/
 projectFilesBackup/
 bower_components/
+creds.js

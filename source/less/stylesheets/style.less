@@ -1,0 +1,92 @@
+@import "bootstrap.less";
+
+body { padding-top: 70px; }
+
+@fact-margin : 2px;
+
+.fact {
+  border: solid 1px transparent;
+  border-radius: 2px;
+  margin: @fact-margin;
+  padding: 4px;
+
+  &:hover {
+    border-color: @gray-lighter;
+
+    .fact-edit-btns {
+      visibility: visible;
+    }
+
+    .fact__issues{
+      visibility: visible;
+    }
+  }
+}
+
+.fact__issue--Resolved {
+  .bg-success
+}
+
+.fact__issue--Closed a {
+  color: @gray-lighter;
+  text-decoration:line-through;
+}
+
+.fact__issue--Open {
+  .bg-warning
+}
+
+.fact-edit-btns {
+  visibility: hidden;
+  .pull-right()
+}
+
+.fact__issues{
+  visibility: hidden;
+}
+
+.facts {
+  padding: @fact-margin;
+  .make-sm-column(8);
+  .make-sm-column-offset(2);
+
+  .make-md-column(6);
+  .make-md-column-offset(3);
+
+  .make-lg-column(6);
+  .make-lg-column-offset(3);
+
+}
+
+.fact--done:hover {
+  .bg-success
+}
+
+.fact--in-progress:hover {
+  .bg-info
+}
+
+.fact--testing:hover {
+  .bg-warning
+}
+
+.fact--broken {
+  p {
+    .text-danger
+  }
+
+  &:hover {
+    .bg-danger
+  }
+}
+
+.add-fact-form {
+  .make-sm-column(8);
+  .make-sm-column-offset(2);
+
+  .make-md-column(6);
+  .make-md-column-offset(3);
+
+  .make-lg-column(6);
+  .make-lg-column-offset(3);
+}
