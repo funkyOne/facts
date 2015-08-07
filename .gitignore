@@ -4,3 +4,4 @@ node_modules/
 projectFilesBackup/
 bower_components/
 creds.js
+client/dist/
