@@ -2,7 +2,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var _ = require('lodash');
 var http = require('http');
-var session = require('creds').session;
+var session = require('./creds').session;
 
 const epicField = 'customfield_10006';
 const apiHost = 'ppab.mplogic.co.uk';

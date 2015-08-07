@@ -1,9 +1,8 @@
 angular.module('p7', ["ngRoute", "ui.bootstrap", "ngTagsInput", 'ngSanitize'])
-    .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
-//     $locationProvider.html5Mode(true);
+    .config(['$routeProvider', ($routeProvider) => {
 
         $routeProvider.when('/facts', {
-            templateUrl: '/app/templates/facts.tpl.html',
+            templateUrl: '/facts/facts.tpl.html',
             controller: 'FactsCtrl',
             resolve: {
                 facts: ['Facts', function (Facts) {
@@ -15,7 +14,7 @@ angular.module('p7', ["ngRoute", "ui.bootstrap", "ngTagsInput", 'ngSanitize'])
         $routeProvider.otherwise({redirectTo: '/facts'});
     }])
 
-    .controller("FactsCtrl", ["$scope", "Facts", "$modal","$rootScope","$http", function ($scope, Facts, $modal, $rootScope, $http) {
+    .controller("FactsCtrl", ["$scope", "Facts", "$modal","$rootScope","$http", ($scope, Facts, $modal, $rootScope, $http)=> {
         $scope.categories = Facts.categories();
         //$scope.reset = function () {
         //    Facts.reset();
@@ -43,7 +42,7 @@ angular.module('p7', ["ngRoute", "ui.bootstrap", "ngTagsInput", 'ngSanitize'])
         $scope.addFact = function () {
 
             var modalInstance = $modal.open({
-                templateUrl: '/app/templates/add-fact.html',
+                templateUrl: '/facts/add-fact.html',
                 controller: 'AddFactCtrl',
                 resolve: ["Facts"]
             });
@@ -59,7 +58,7 @@ angular.module('p7', ["ngRoute", "ui.bootstrap", "ngTagsInput", 'ngSanitize'])
             scope.fact = fact;
 
             var modalInstance = $modal.open({
-                templateUrl: '/app/templates/edit-fact.html',
+                templateUrl: '/facts/edit-fact.html',
                 controller: 'EditFactCtrl',
                 resolve: ["Facts"],
                 scope:scope

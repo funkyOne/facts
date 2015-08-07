@@ -5,7 +5,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -13,15 +12,9 @@ var users = require('./routes/users');
 var facts = require('./routes/facts');
 var api = require('./routes/api');
 
-
 var app = express();
 
-
-var bootstrapPath = path.join(__dirname, 'bower_components', 'bootstrap');
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+var clientProjectRoot = path.join(__dirname,"..", "client");
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -29,22 +22,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-//app.use(require('less-middleware')(path.join(__dirname, 'public')));
 
-app.use(require('less-middleware')(path.join(__dirname, 'source', 'less'), {
-    dest: path.join(__dirname, 'public'),
-    parser: {
-        paths: [path.join(bootstrapPath, 'less')]
-    }
-//    ,    preprocess: {
-//        path: function(pathname, req) {
-//            return pathname.replace('/stylesheets/', '/');
-//        }
-//    }
-}));
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/bower_components',  express.static(path.join(__dirname,'bower_components')));
+app.use(express.static(path.join(clientProjectRoot,"dist")));
+app.use('/bower_components',  express.static(path.join(clientProjectRoot,'bower_components')));
 
 
 //app.use('/users', users);
