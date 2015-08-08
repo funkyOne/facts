@@ -20,6 +20,23 @@
     "angular-sanitize": "1.2.28",
     "bootstrap": "~3.3.2",
     "ng-tags-input": "~2.1.1",
-    "remarkable": "~1.6.0"
+    "remarkable": "~1.6.0",
+    "lodash": "~3.10.1"
+  },
+  "overrides": {
+    "bootstrap": {
+      "ignore": true
+    },
+    "angular-bootstrap": {
+      "main": [
+        "ui-bootstrap.js","ui-bootstrap-tpls.js"
+      ]
+    },
+    "ng-tags-input": {
+      "main": ["ng-tags-input.js","ng-tags-input.css","ng-tags-input.bootstrap.css"]
+    },
+    "jquery": {
+      "ignore": true
+    }
   }
 }

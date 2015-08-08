@@ -4,6 +4,9 @@ var sourcemaps = require("gulp-sourcemaps");
 var concat = require("gulp-concat");
 var less = require('gulp-less');
 var path = require('path');
+var inject = require('gulp-inject');
+var bowerFiles = require('main-bower-files');
+var es = require('event-stream');
 
 
 var pipes = {};
@@ -19,7 +22,7 @@ pipes.buildClientCode = function () {
         .pipe(sourcemaps.init())
         .pipe(babel())
         .on('error', handleError)
-        .pipe(concat("main.js"))
+        //.pipe(concat("main.js"))
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("./dist"));
 };
@@ -62,3 +65,16 @@ gulp.task("watch-less", function () {
 });
 
 gulp.task("watch-all", ["watch-code","watch-less"]);
+
+gulp.task('index',["compile-code"], function () {
+    // It's not necessary to read the files (will speed up things), we're only after their paths:
+    //var sources = gulp.src(['./src/**/*.js', './src/**/*.css'], {read: false});
+
+    var sources = gulp.src(['./dist/**/*.js',"./dist/styles/**/*.css"], {read: false});
+
+
+    gulp.src('./src/index.html')
+        .pipe(inject(gulp.src(bowerFiles(), {read: false}), {name: 'bower'}))
+        .pipe(inject(sources,{ignorePath:"/dist"}))
+        .pipe(gulp.dest("./dist"));
+});
