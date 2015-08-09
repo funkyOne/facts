@@ -113,7 +113,7 @@ router.get('/', function (req, res) {
     mssql.open(conn_str, function (err, new_conn) {
         var promises = [];
 
-        promises.push(query(new_conn, "select * from fact"));
+        promises.push(query(new_conn, "select * from fact where hidden=0"));
         promises.push(query(new_conn, "select * from category"));
         promises.push(query(new_conn, "select * from fact_category"));
         //promises.push(query(new_conn, "select * from fact_issue"));
@@ -154,7 +154,7 @@ router.get('/:id/issues', function (req, res) {
                     return;
                 }
 
-                var issueIds = _(fact_issues).pluck("issue_id").map(String).value()
+                var issueIds = _(fact_issues).pluck("issue_id").map(String).value();
 
                 db.collection("issues").find({id: {$in: issueIds}})
                     .toArray(function (err, issues) {
@@ -208,7 +208,7 @@ router.put('/:id', function (req, res, next) {
     var factId = req.params.id;
     var fact = req.body;
 
-    mssql.queryRaw(conn_str,"UPDATE fact SET text=?, html=? WHERE id=?",[fact.text,fact.html,factId], function (err, result) {
+    mssql.queryRaw(conn_str,"UPDATE fact SET text=?, html=?,hidden=? WHERE id=?",[fact.text,fact.html, fact.hidden, factId], function (err, result) {
         if(err)
         {
             res.sendStatus(500);

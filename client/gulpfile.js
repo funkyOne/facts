@@ -9,10 +9,15 @@ var bowerFiles = require('main-bower-files');
 var es = require('event-stream');
 
 
+function handleError(err) {
+    console.log(err.toString());
+    this.emit('end');
+}
+
 var pipes = {};
 
 var paths = {
-    scripts: "./src/**/*.js",
+    scripts: "./src/app/**/*.js",
     less: "./src/less/style.less",
     partials: ['./src/app/**/*.html', '!./src/app/index.html']
 };
@@ -27,9 +32,7 @@ pipes.buildClientCode = function () {
         .pipe(gulp.dest("./dist"));
 };
 
-gulp.task("default", function () {
-    return pipes.buildClientCode();
-});
+gulp.task("default", ["compile-code","less","index","copy-partials"]);
 
 gulp.task("compile-code", function () {
     return pipes.buildClientCode();
@@ -46,35 +49,33 @@ gulp.task('less', function () {
         .pipe(gulp.dest('./dist/styles'));
 });
 
-function handleError(err) {
-    console.log(err.toString());
-    this.emit('end');
-}
-
 gulp.task("copy-partials", function(){
     return gulp.src(paths.partials)
         .pipe(gulp.dest('./dist'));
 });
 
 gulp.task("watch-code", function () {
-    gulp.watch(paths.scripts, ["compile-code"]);
+    gulp.watch(paths.scripts, ["compile-code","index"]);
 });
 
 gulp.task("watch-less", function () {
-    gulp.watch(paths.less, ["less"]);
+    gulp.watch(paths.less, ["less","index"]);
 });
 
-gulp.task("watch-all", ["watch-code","watch-less"]);
+gulp.task("watch-all", function () {
+    gulp.watch(paths.scripts, ["compile-code","inject"]);
+    gulp.watch(paths.less, ["less","inject"]);
+    gulp.watch(paths.partials, ["copy-partials"]);
+});
 
-gulp.task('index',["compile-code"], function () {
+gulp.task('inject', function () {
     // It's not necessary to read the files (will speed up things), we're only after their paths:
-    //var sources = gulp.src(['./src/**/*.js', './src/**/*.css'], {read: false});
-
     var sources = gulp.src(['./dist/**/*.js',"./dist/styles/**/*.css"], {read: false});
-
 
     gulp.src('./src/index.html')
         .pipe(inject(gulp.src(bowerFiles(), {read: false}), {name: 'bower'}))
         .pipe(inject(sources,{ignorePath:"/dist"}))
         .pipe(gulp.dest("./dist"));
 });
+
+gulp.task("index",["compile-code",'inject']);

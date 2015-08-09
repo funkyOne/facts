@@ -3,7 +3,7 @@ angular.module('p7', ["ngRoute", "ui.bootstrap", "ngTagsInput", 'ngSanitize'])
 
         $routeProvider.when('/facts', {
             templateUrl: '/facts/facts.tpl.html',
-            controller: 'FactsCtrl',
+            controller: 'FactsCtrl as vm',
             resolve: {
                 facts: ['Facts', function (Facts) {
                     return Facts.initialized;
@@ -13,63 +13,6 @@ angular.module('p7', ["ngRoute", "ui.bootstrap", "ngTagsInput", 'ngSanitize'])
 
         $routeProvider.otherwise({redirectTo: '/facts'});
     }])
-
-    .controller("FactsCtrl", ["$scope", "Facts", "$modal","$rootScope","$http", ($scope, Facts, $modal, $rootScope, $http)=> {
-        $scope.categories = Facts.categories();
-        //$scope.reset = function () {
-        //    Facts.reset();
-        //    location.reload();
-        //};
-
-        $scope.delete = function (fact, category) {
-            Facts.deleteFact(fact, category);
-            $scope.categories = Facts.categories();
-        };
-
-        $scope.getDetails = function(fact){
-
-            if (fact.issues)
-            {return;}
-
-
-            $http.get("/facts/"+fact.id+"/issues").success(function(issues){
-                fact.issues = issues;
-            })
-        };
-
-        $scope.view = "all";
-
-        $scope.addFact = function () {
-
-            var modalInstance = $modal.open({
-                templateUrl: '/facts/add-fact.html',
-                controller: 'AddFactCtrl',
-                resolve: ["Facts"]
-            });
-
-            modalInstance.result.then(function () {
-                $scope.categories = Facts.categories();
-            });
-        };
-
-        $scope.edit = function (fact) {
-
-            var scope = $rootScope.$new();
-            scope.fact = fact;
-
-            var modalInstance = $modal.open({
-                templateUrl: '/facts/edit-fact.html',
-                controller: 'EditFactCtrl',
-                resolve: ["Facts"],
-                scope:scope
-            });
-
-            modalInstance.result.then(function () {
-                $scope.categories = Facts.categories();
-            });
-        };
-    }
-    ])
     .controller("AddFactCtrl", function ($scope, $modalInstance, Facts) {
         $scope.fact = {};
         $scope.categories = [];

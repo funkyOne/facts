@@ -2,7 +2,8 @@
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -17,74 +18,80 @@
 
                 <li><a ng-click="addFact()">New fact</a></li>
                 <!--<li class="dropdown">-->
-                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
-                    <!--<ul class="dropdown-menu">-->
-                        <!--<li><a href="#">Action</a></li>-->
-                        <!--<li><a href="#">Another action</a></li>-->
-                        <!--<li><a href="#">Something else here</a></li>-->
-                        <!--<li role="separator" class="divider"></li>-->
-                        <!--<li><a href="#">Separated link</a></li>-->
-                        <!--<li role="separator" class="divider"></li>-->
-                        <!--<li><a href="#">One more separated link</a></li>-->
-                    <!--</ul>-->
+                <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
+                <!--<ul class="dropdown-menu">-->
+                <!--<li><a href="#">Action</a></li>-->
+                <!--<li><a href="#">Another action</a></li>-->
+                <!--<li><a href="#">Something else here</a></li>-->
+                <!--<li role="separator" class="divider"></li>-->
+                <!--<li><a href="#">Separated link</a></li>-->
+                <!--<li role="separator" class="divider"></li>-->
+                <!--<li><a href="#">One more separated link</a></li>-->
+                <!--</ul>-->
                 <!--</li>-->
             </ul>
             <!--<form class="navbar-form navbar-left" role="search">-->
-                <!--<div class="form-group">-->
-                    <!--<input type="text" class="form-control" placeholder="Search">-->
-                <!--</div>-->
-                <!--<button type="submit" class="btn btn-default">Submit</button>-->
+            <!--<div class="form-group">-->
+            <!--<input type="text" class="form-control" placeholder="Search">-->
+            <!--</div>-->
+            <!--<button type="submit" class="btn btn-default">Submit</button>-->
             <!--</form>-->
             <!--<ul class="nav navbar-nav navbar-right">-->
-                <!--<li><a href="#">Link</a></li>-->
-                <!--<li class="dropdown">-->
-                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
-                    <!--<ul class="dropdown-menu">-->
-                        <!--<li><a href="#">Action</a></li>-->
-                        <!--<li><a href="#">Another action</a></li>-->
-                        <!--<li><a href="#">Something else here</a></li>-->
-                        <!--<li role="separator" class="divider"></li>-->
-                        <!--<li><a href="#">Separated link</a></li>-->
-                    <!--</ul>-->
-                <!--</li>-->
+            <!--<li><a href="#">Link</a></li>-->
+            <!--<li class="dropdown">-->
+            <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
+            <!--<ul class="dropdown-menu">-->
+            <!--<li><a href="#">Action</a></li>-->
+            <!--<li><a href="#">Another action</a></li>-->
+            <!--<li><a href="#">Something else here</a></li>-->
+            <!--<li role="separator" class="divider"></li>-->
+            <!--<li><a href="#">Separated link</a></li>-->
             <!--</ul>-->
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+            <!--</li>-->
+            <!--</ul>-->
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
 </nav>
 
-<div class="container-fluid"><div class="row">
+<div class="container-fluid">
+    <div class="row">
+        <div class="facts">
+            <div class="btn-group pull-right">
+                <label class="btn btn-primary" ng-model="view" btn-radio="'text'">Text</label>
+                <label class="btn btn-primary" ng-model="view" btn-radio="'all'">All</label>
+                <label class="btn btn-primary" ng-model="view" btn-radio="'implemented'">Implemented</label>
+                <label class="btn btn-primary" ng-model="view" btn-radio="'todo'">To Do</label>
+            </div>
 
-    <div class="facts">
-        <div class="btn-group pull-right">
-            <label class="btn btn-primary" ng-model="view" btn-radio="'text'">Text</label>
-            <label class="btn btn-primary" ng-model="view" btn-radio="'all'">All</label>
-            <label class="btn btn-primary" ng-model="view" btn-radio="'implemented'">Implemented</label>
-            <label class="btn btn-primary" ng-model="view" btn-radio="'todo'">To Do</label>
-        </div>
+            <h1>Documentation</h1>
 
-        <h1>Documentation</h1>
+            <hr/>
 
-        <hr/>
+            <div ng-repeat="category in vm.categories track by $index">
+                <h2>{{category.title}}</h2>
 
-        <div ng-repeat="category in categories track by $index">
-            <h2>{{category.title}}</h2>
+                <div class="fact fact--{{fact.state.title}}" ng-repeat="fact in category.facts track by fact.id | filter:{hidden:'false'}"
+                     ng-mouseover="vm.getDetails(fact)">
 
-            <div class="fact fact--{{fact.state.title}}" ng-repeat="fact in category.facts track by fact.id" ng-mouseover="getDetails(fact)">
+                    <div class="fact-edit-btns">
+                        <button class="btn-xs btn btn-danger" ng-click="vm.delete(fact,category)">&times;</button>
+                        <button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">edit</button>
+                        <button class="btn-xs btn btn-primary" ng-click="vm.hide(fact)">hide</button>
+                        <!--<button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">create issue</button>-->
+                    </div>
 
-                <div class="fact-edit-btns">
-                    <button class="btn-xs btn btn-danger" ng-click="delete(fact,category)">&times;</button>
-                    <button class="btn-xs btn btn-primary" ng-click="edit(fact)">E</button>
-                </div>
+                    <span ng-bind-html="fact.html"></span>
 
-                <span ng-bind-html="fact.html"></span>
-
-                <div class="fact__issues">
-                    <div class="fact__issue fact__issue--{{issue.fields.status.name}}" ng-repeat="issue in fact.issues">
-                        <a href="{{issue.self}}">{{issue.key}} - {{issue.fields.summary}}</a>
+                    <div class="fact__issues">
+                        <div class="fact__issue fact__issue--{{issue.fields.status.name}}"
+                             ng-repeat="issue in fact.issues">
+                            <a href="{{issue.self}}">{{issue.key}} - {{issue.fields.summary}}</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
