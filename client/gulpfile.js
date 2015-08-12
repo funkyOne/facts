@@ -77,7 +77,7 @@ gulp.task('inject', function () {
 
     gulp.src('./src/index.html')
         .pipe(inject(gulp.src(bowerFiles(), {read: false}), {name: 'bower'}))
-        .pipe(inject(css), {ignorePath: "/dist"})
+        .pipe(inject(css, {ignorePath: "/dist"}))
         .pipe(inject(sources.pipe(angularFilesort()), {ignorePath: "/dist"}))
         .pipe(gulp.dest("./dist"));
 });
