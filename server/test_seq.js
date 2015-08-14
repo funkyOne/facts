@@ -3,9 +3,25 @@
  */
 var Sequelize = require("sequelize");
 var pg_connection = require("./creds").pg_connection;
+var _ = require("lodash");
+
 
 var sequelize = new Sequelize(pg_connection);
 
+var d = sequelize.define;
+
+sequelize.define = function(name,def,opts){
+    _.forEach(def,function(column,colName){
+        column.field = _.snakeCase(colName);
+    });
+
+    opts = opts||{};
+
+    opts.underscored = true;
+    opts.underscoredAll = true;
+
+    return d.call(this,name,def,opts);
+};
 
 var Fact = sequelize.define('fact', {
     id: {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
@@ -18,9 +34,6 @@ var Fact = sequelize.define('fact', {
     hidden: {
         type: Sequelize.BOOLEAN
     }
-}, {
-    underscored: true,
-    freezeTableName: true // Model tableName will be the same as the model name
 });
 
 
@@ -29,15 +42,12 @@ var Category = sequelize.define('category', {
     title: {
         type: Sequelize.TEXT
     },
-    epic_key: {
+    epicKey: {
         type:Sequelize.STRING(10)
     }
-}, {
-    underscored: true,
-    freezeTableName: true // Model tableName will be the same as the model name
 });
 
-var FactCategory = sequelize.define('fact_category', {});
+//var FactCategory = sequelize.define('fact_category', {});
 
 //    fact_id: {
 //        type: Sequelize.INTEGER,
@@ -62,8 +72,8 @@ var FactCategory = sequelize.define('fact_category', {});
 //    freezeTableName: true // Model tableName will be the same as the model name
 //});
 
-Category.belongsToMany(Fact, {through: FactCategory});
-Fact.belongsToMany(Category, {through: FactCategory});
+Category.belongsToMany(Fact, {through: 'fact_category'});
+Fact.belongsToMany(Category, {through: 'fact_category'});
 
 
 //FactCategory.belongsTo(Fact);
@@ -81,12 +91,10 @@ var Issue = sequelize.define('issue', {
     key:{
         type:Sequelize.STRING(10)
     },
-    epic_key:{
+    epicKey:{
         type:Sequelize.STRING(10)
     }
 
-}, {
-    freezeTableName: true // Model tableName will be the same as the model name
 });
 
 
@@ -113,17 +121,19 @@ var Issue = sequelize.define('issue', {
 //    freezeTableName: true // Model tableName will be the same as the model name
 //});
 
-Fact.belongsToMany(Issue, {through: "fact_issue"});
+
 Issue.belongsToMany(Fact, {through: "fact_issue"});
+Fact.belongsToMany(Issue, {through: "fact_issue"});
 
+sequelize.sync();
 
-Fact.sync({force: true}).then(function () {
-    return Category.sync({force:true});
-}).then(function(){
-    return Issue.sync({force:true});
-})
+//Fact.sync({force: true}).then(function () {
+//    return Category.sync({force:true});
+//}).then(function(){
+//    return Issue.sync({force:true});
+//})
 //    .then(function(){
-//    return FactIssue.sync({force:true});
+//    return s.sync({force:true});
 //})
 //    .then(function(){
 //    return FactCategory.sync({force:true});
