@@ -11,6 +11,8 @@ var mssql = require('node-sqlserver-unofficial');
 var conn_str = "Driver={SQL Server Native Client 11.0};Server={(localdb)\\v11.0};Database={facts};Trusted_Connection={Yes};";
 
 
+var Fact = require('../test_seq').Fact;
+
 
 //file syste,
 //router.get('/', function (req, res) {
@@ -200,6 +202,26 @@ function query(con, sql, params) {
 }
 
 
+//router.put('/:id', function (req, res, next) {
+//    if (!req.body) {
+//        res.sendStatus(400);
+//    }
+//
+//    var factId = req.params.id;
+//    var fact = req.body;
+//
+//    mssql.queryRaw(conn_str,"UPDATE fact SET text=?, html=?,hidden=? WHERE id=?",[fact.text,fact.html, fact.hidden, factId], function (err, result) {
+//        if(err)
+//        {
+//            res.sendStatus(500);
+//            console.log(err);
+//            return
+//        }
+//
+//        res.sendStatus(200);
+//    });
+//});
+
 router.put('/:id', function (req, res, next) {
     if (!req.body) {
         res.sendStatus(400);
@@ -208,16 +230,12 @@ router.put('/:id', function (req, res, next) {
     var factId = req.params.id;
     var fact = req.body;
 
-    mssql.queryRaw(conn_str,"UPDATE fact SET text=?, html=?,hidden=? WHERE id=?",[fact.text,fact.html, fact.hidden, factId], function (err, result) {
-        if(err)
-        {
-            res.sendStatus(500);
-            console.log(err);
-            return
-        }
-
-        res.sendStatus(200);
-    });
+    Fact.find({where:{id:factId}}).then(function(fact){
+        fact.updateAttributes(req.body).success(function(){
+            res.sendStatus(200);
+        })
+    })
 });
+
 
 module.exports = router;

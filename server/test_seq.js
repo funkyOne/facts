@@ -139,3 +139,6 @@ sequelize.sync();
 //    return FactCategory.sync({force:true});
 //})
 ;
+
+module.exports.Issue = Issue;
+module.errors.Fact = Fact;
