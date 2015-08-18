@@ -8,6 +8,8 @@ Also documentation starts to reflect current state of the application. So it's b
 
 ### What is fact?
 A fact is actually a fact. Some piece of information about the system under documentation. 
+- fact can have multiple issues related to it
+- fact can have state identifying it's impementation stage
 
 ##how to run
 
