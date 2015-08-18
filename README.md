@@ -6,6 +6,9 @@ It requires you to rethink the way you create issues. Instead of "this button sh
 
 Also documentation starts to reflect current state of the application. So it's becomes visible what part of the app is done and working, what are in progress, what is broken.
 
+### What is fact?
+A fact is actually a fact. Some piece of information about the system under documentation. 
+
 ##how to run
 
 ###start mongo
