@@ -11,10 +11,6 @@ A fact is actually a fact. Some piece of information about the system under docu
 
 ##how to run
 
-###start mongo
-```
-    C:\mongodb\bin\mongod.exe --dbpath C:\mongodb\bin\data
-```
 ###start express server
 from server folder:
 ```
