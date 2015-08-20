@@ -63,7 +63,7 @@ gulp.task("watch-less", function () {
     gulp.watch(paths.less, ["less", "index"]);
 });
 
-gulp.task("watch-all", function () {
+gulp.task("watch-all", ["default"], function () {
     gulp.watch(paths.scripts, ["compile-code", "inject"]);
     gulp.watch(paths.less, ["less", "inject"]);
     gulp.watch(paths.partials, ["copy-partials"]);

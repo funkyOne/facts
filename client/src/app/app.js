@@ -2,7 +2,7 @@ angular.module('p7', ["ngRoute", "ui.bootstrap", "ngTagsInput", 'ngSanitize'])
     .config(['$routeProvider', ($routeProvider) => {
 
         $routeProvider.when('/facts', {
-            templateUrl: '/facts/facts.tpl.html',
+            templateUrl: '/facts/facts.html',
             controller: 'FactsCtrl as vm',
             resolve: {
                 facts: ['Facts', function (Facts) {
@@ -14,7 +14,7 @@ angular.module('p7', ["ngRoute", "ui.bootstrap", "ngTagsInput", 'ngSanitize'])
         $routeProvider.otherwise({redirectTo: '/facts'});
     }])
 
-    .controller("EditFactCtrl", function ($scope, $modalInstance, Facts) {
+    .controller("EditFactCtrl", ($scope, $modalInstance, Facts) => {
 
         $scope.issueStates = [{title:"new", id:0},{title:"in progress", id:1}, {title:"testing", id:2}, {title:"done", id:3}];
 
