@@ -1,17 +1,15 @@
 var Promise = require('promise');
 var express = require('express');
 var router = express.Router();
-var fs = require("fs");
 var MongoClient = require('mongodb').MongoClient;
 var _ = require('lodash');
 var path = require('path');
-var datafile = path.join(__base, 'data.json');
 var storeIssue = require('../import').storeIssue;
-var mssql = require('node-sqlserver-unofficial');
+//var mssql = require('node-sqlserver-unofficial');
+
 var conn_str = "Driver={SQL Server Native Client 11.0};Server={(localdb)\\v11.0};Database={facts};Trusted_Connection={Yes};";
 
-
-var Fact = require('../test_seq').Fact;
+//var Fact = require('../test_seq').Fact;
 
 
 //file syste,
@@ -57,13 +55,13 @@ function map(db) {
         var collection = db.collection('issues');
 
         collection.aggregate([{
-            $match: {
-                "fields.customfield_10006": {
-                    $exists: true,
-                    $ne: null
+                $match: {
+                    "fields.customfield_10006": {
+                        $exists: true,
+                        $ne: null
+                    }
                 }
-            }
-        }, {$project: {"epic": "$fields.customfield_10006", "key": 1, "html": "$fields.description"}}])
+            }, {$project: {"epic": "$fields.customfield_10006", "key": 1, "html": "$fields.description"}}])
             .toArray(function (err, issues) {
 
                 var promises = [];
@@ -112,65 +110,92 @@ function map(db) {
 
 
 router.get('/', function (req, res) {
-    mssql.open(conn_str, function (err, new_conn) {
-        var promises = [];
 
-        promises.push(query(new_conn, "select * from fact where hidden=0"));
-        promises.push(query(new_conn, "select * from category"));
-        promises.push(query(new_conn, "select * from fact_category"));
-        //promises.push(query(new_conn, "select * from fact_issue"));
+    var db = req.app.get("db");
 
-        Promise.all(promises).then(function (results) {
-            var facts = results[0];
-            var categories = results[1];
-            var fact_category = results[2];
+    db.fact.find({},function(err, facts ){
+        err && console.error(err);
 
-            var facts_indexed = _.indexBy(facts, "id");
+        db.category.find({},function(err, categories ){
+            err && console.error(err);
 
-            var cat_ffacts = _.groupBy(fact_category, "category_id");
+            db.fact_category.find({},function(err, fact_category ){
+                err && console.error(err);
 
-            _.forEach(categories, function (cat) {
-                cat.facts = _.map(cat_ffacts[cat.id], (function (fc) {
-                    return facts_indexed[fc.fact_id];
-                }));
+                var facts_indexed = _.indexBy(facts, "id");
+
+                var cat_ffacts = _.groupBy(fact_category, "category_id");
+
+                _.forEach(categories, function (cat) {
+                    cat.facts = _.map(cat_ffacts[cat.id], (function (fc) {
+                        return facts_indexed[fc.fact_id];
+                    }));
+                });
+
+                res.send(categories);
             });
-
-            res.send(categories);
-        }, function (err) {
-            res.send(err);
         });
     });
+
+    //mssql.open(conn_str, function (err, new_conn) {
+    //    var promises = [];
+    //
+    //    promises.push(query(new_conn, "select * from fact where hidden=0"));
+    //    promises.push(query(new_conn, "select * from category"));
+    //    promises.push(query(new_conn, "select * from fact_category"));
+    //    //promises.push(query(new_conn, "select * from fact_issue"));
+    //
+    //    Promise.all(promises).then(function (results) {
+    //        var facts = results[0];
+    //        var categories = results[1];
+    //        var fact_category = results[2];
+    //
+    //        var facts_indexed = _.indexBy(facts, "id");
+    //
+    //        var cat_ffacts = _.groupBy(fact_category, "category_id");
+    //
+    //        _.forEach(categories, function (cat) {
+    //            cat.facts = _.map(cat_ffacts[cat.id], (function (fc) {
+    //                return facts_indexed[fc.fact_id];
+    //            }));
+    //        });
+    //
+    //        res.send(categories);
+    //    }, function (err) {
+    //        res.send(err);
+    //    });
+    //});
 });
 
 router.get('/:id/issues', function (req, res) {
 
     mssql.open(conn_str, function (err, new_conn) {
 
-        query(new_conn,"select * from fact_issue where fact_id=?", [req.params.id])
+        query(new_conn, "select * from fact_issue where fact_id=?", [req.params.id])
             .then(function (fact_issues) {
 
 
-            MongoClient.connect("mongodb://localhost:27017/exampleDb", function (err, db) {
-                if (err) {
-                    res.send("err");
-                    return;
-                }
+                MongoClient.connect("mongodb://localhost:27017/exampleDb", function (err, db) {
+                    if (err) {
+                        res.send("err");
+                        return;
+                    }
 
-                var issueIds = _(fact_issues).pluck("issue_id").map(String).value();
+                    var issueIds = _(fact_issues).pluck("issue_id").map(String).value();
 
-                db.collection("issues").find({id: {$in: issueIds}})
-                    .toArray(function (err, issues) {
+                    db.collection("issues").find({id: {$in: issueIds}})
+                        .toArray(function (err, issues) {
 
-                        if (err) {
-                            res.send("err")
-                        }
+                            if (err) {
+                                res.send("err")
+                            }
 
-                        res.send(issues)
-                    })
-            })
-        }, function (reason) {
-            res.send(reason)
-        });
+                            res.send(issues)
+                        })
+                })
+            }, function (reason) {
+                res.send(reason)
+            });
     })
 });
 
@@ -230,12 +255,16 @@ router.put('/:id', function (req, res, next) {
     var factId = req.params.id;
     var fact = req.body;
 
-    Fact.find({where:{id:factId}}).then(function(fact){
-        fact.updateAttributes(req.body).success(function(){
+    Fact.find({where: {id: factId}}).then(function (fact) {
+        fact.updateAttributes(req.body).success(function () {
             res.sendStatus(200);
         })
     })
 });
+
+router.post('/import', function (req, res) {
+
+})
 
 
 module.exports = router;

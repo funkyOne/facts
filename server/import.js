@@ -9,8 +9,10 @@ const apiHost = 'ppab.mplogic.co.uk';
 const apiPort = 8089;
 const apiBaseUrl = '/rest/api/2';
 
-const lowerIssueBoundary = 500;
-const upperIssueBoundary = 700;
+
+
+const lowerIssueBoundary = 700;
+const upperIssueBoundary = 950;
 
 // Connect to the db
 //MongoClient.connect("mongodb://localhost:27017/exampleDb", function (err, db) {
@@ -22,7 +24,7 @@ const upperIssueBoundary = 700;
 //
 //    db.createCollection('issues', function (err, collection) {
 //        storeNext().then(function () {
-//            db.close()
+//            db.close();
 //            console.log("done!");
 //            process.exit();
 //        })
@@ -37,6 +39,10 @@ const upperIssueBoundary = 700;
 function storeIssue(db, i) {
     return storeByKey(db, "PPAB-" + i);
 }
+
+//http//ppab.mplogic.co.uk:8089/rest/api/2/issue/PPAB-901
+
+//http://ppab.mplogic.co.uk:8089/rest/api/2/issue
 
 function storeByKey(db, key) {
     return new Promise(function (resolve, reject) {

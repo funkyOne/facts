@@ -61,4 +61,4 @@ class FactsCtrl {
     }
 }
 FactsCtrl.$inject = ["Facts", "$modal", "$rootScope", "$http"];
-angular.module("p7").controller("FactsCtrl",FactsCtrl);
+angular.module("p7").controller("FactsCtrl", FactsCtrl);
