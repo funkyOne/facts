@@ -92,32 +92,42 @@ router.get('/', function (req, res) {
 
 router.get('/:id/issues', function (req, res) {
     var db = req.app.get("db");
+    var factId = req.params.id;
 
-    db.fact_issue.find({fact_id: req.params.id}, (err, fact_issues) => {
+    db.run("select * from issue i join fact_issue fi on i.id=fi.issue_id and fi.fact_id=$1", [factId], function(err, issues){
         if (err) {
-            res.send(err);
+            res.status(500).send(err);
             return;
         }
 
-        MongoClient.connect("mongodb://localhost:27017/exampleDb", (err, db) => {
-            if (err) {
-                res.send(err);
-                return;
-            }
-
-            var issueIds = _(fact_issues).pluck("issue_id").map(String).value();
-
-            db.collection("issues").find({id: {$in: issueIds}})
-                .toArray(function (err, issues) {
-
-                    if (err) {
-                        res.send("err")
-                    }
-
-                    res.send(issues)
-                })
-        })
+        res.send(issues);
     });
+
+    //db.fact_issue.find({fact_id: req.params.id}, (err, fact_issues) => {
+    //    if (err) {
+    //        res.send(err);
+    //        return;
+    //    }
+    //
+    //    MongoClient.connect("mongodb://localhost:27017/exampleDb", (err, db) => {
+    //        if (err) {
+    //            res.send(err);
+    //            return;
+    //        }
+    //
+    //        var issueIds = _(fact_issues).pluck("issue_id").map(String).value();
+    //
+    //        db.collection("issues").find({id: {$in: issueIds}})
+    //            .toArray(function (err, issues) {
+    //
+    //                if (err) {
+    //                    res.send("err")
+    //                }
+    //
+    //                res.send(issues)
+    //            })
+    //    })
+    //});
 });
 
 router.put('/:id', (req, res) => {
@@ -131,7 +141,8 @@ router.put('/:id', (req, res) => {
 
     db.fact.save(fact, (err, updated)=> {
         if (err) {
-            res.send(err);
+            res.status(500).send(err);
+            return;
         }
 
         res.sendStatus(200);

@@ -47,7 +47,8 @@ class FactsCtrl {
             templateUrl: '/facts/edit-fact.html',
             controller: 'EditFactCtrl',
             resolve: ["Facts"],
-            scope: scope
+            scope: scope,
+            size: "lg"
         });
 
         modalInstance.result.then(()=> {

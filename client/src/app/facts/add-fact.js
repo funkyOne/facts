@@ -1,4 +1,4 @@
-angular.module("p7").controller("AddFactCtrl", function ($scope, $modalInstance, Facts) {
+angular.module("p7").controller("AddFactCtrl", ($scope, $modalInstance, Facts) => {
     $scope.fact = {};
     $scope.categories = [];
 
