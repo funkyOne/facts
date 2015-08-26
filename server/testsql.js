@@ -44,7 +44,7 @@ function saveIssue(issue) {
                 reject(err);
             }
 
-            resolve()
+            resolve();
 
         });
 

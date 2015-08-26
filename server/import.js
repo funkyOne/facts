@@ -1,15 +1,15 @@
+'use strict';
+
 // Retrieve
-var MongoClient = require('mongodb').MongoClient;
-var _ = require('lodash');
-var http = require('http');
-var session = require('./creds').session;
+let MongoClient = require('mongodb').MongoClient;
+let _ = require('lodash');
+let http = require('http');
+let session = require('./creds').session;
 
 const epicField = 'customfield_10006';
 const apiHost = 'ppab.mplogic.co.uk';
 const apiPort = 8089;
 const apiBaseUrl = '/rest/api/2';
-
-
 
 const lowerIssueBoundary = 700;
 const upperIssueBoundary = 950;
@@ -46,8 +46,8 @@ function storeIssue(db, i) {
 
 function storeByKey(db, key) {
     return new Promise(function (resolve, reject) {
-        var collection = db.collection('issues');
-        var url = apiBaseUrl + "/issue/" + key;
+        let collection = db.collection('issues');
+        let url = apiBaseUrl + "/issue/" + key;
         process.stdout.write(key+" ");
 
         http.get({
@@ -60,15 +60,14 @@ function storeByKey(db, key) {
                 'Authorization': 'Basic '+session
             }
         }, function (response) {
-
-            var body = '';
+            let body = '';
 
             response.on('data', function (d) {
                 body += d;
             });
 
             response.on('end', function () {
-                var parsed = JSON.parse(body);
+                let parsed = JSON.parse(body);
 
                 if (response.statusCode === 200) {
                     process.stdout.write("done");
@@ -76,15 +75,15 @@ function storeByKey(db, key) {
                     collection.insert(parsed);
                 }
                 else {
-                    var msg = response.statusCode + " " + (parsed.errorMessages && parsed.errorMessages[0]);
+                    let msg = response.statusCode + " " + (parsed.errorMessages && parsed.errorMessages[0]);
                     process.stdout.write(msg);
                     reject(msg);
                 }
                 process.stdout.write("\n");
 
-                resolve(parsed)
+                resolve(parsed);
             });
-        })
+        });
     });
 }
 
