@@ -1,24 +1,26 @@
+'use strict';
+
 require('./base-init');
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+let express = require('express');
+let path = require('path');
+let favicon = require('serve-favicon');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
+let pgConnection = require('./creds').pg_connection;
 
-var facts = require('./routes/facts');
-var api = require('./routes/api');
+let routes = require('././index');
+let facts = require('././facts');
 
-var massive = require("massive");
+let massive = require('massive');
 
-
-
-var app = express();
+let app = express();
 
 var clientProjectRoot = path.join(__dirname,"..", "client");
+
+let massiveInstance = massive.connectSync({connectionString : pgConnection});
+app.set('db', massiveInstance);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -27,20 +29,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(express.static(path.join(clientProjectRoot,"dist")));
+app.use(favicon(path.join(clientProjectRoot,'favicon.ico')));
+
+app.use(express.static(path.join(clientProjectRoot,'dist')));
 app.use('/bower_components',  express.static(path.join(clientProjectRoot,'bower_components')));
 
 
 //app.use('/users', users);
 
-//app.use('/api',api);
 app.use('/facts', facts);
 app.use('/', routes);
 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
+    let err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
