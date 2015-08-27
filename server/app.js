@@ -9,6 +9,7 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let pgConnection = require('./creds').pg_connection;
+let issueSync = require('./issue-sync');
 
 let routes = require('././index');
 let facts = require('././facts');
@@ -17,7 +18,7 @@ let massive = require('massive');
 
 let app = express();
 
-var clientProjectRoot = path.join(__dirname,"..", "client");
+let clientProjectRoot = path.join(__dirname,'../..', 'client');
 
 let massiveInstance = massive.connectSync({connectionString : pgConnection});
 app.set('db', massiveInstance);
@@ -72,18 +73,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-
-
-//
-//mongoose.connect('mongodb://localhost/todoApp', function(err) {
-//    if(err) {
-//        console.log('connection error', err);
-//    } else {
-//        console.log('connection successful');
-//    }
-//});
-
-
+issueSync.initialize();
 
 
 module.exports = app;
