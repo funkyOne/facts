@@ -41,17 +41,6 @@ angular.module("p7")
             }
         }
 
-        //if (!facts.length) {
-        //    var seed = [
-        //        {text: "Homebase logo and home icon don't reset the order, but move us to the home page.", categories: ["header", "navigation", "home page"]},
-        //        {text: "When you click on product brochure you get the user details form.", categories: ["header", "product info", "navigation"] },
-        //        {text: 'Once user fill it and click "Send" brochure is sent.', categories: ["product info", "email"] },
-        //        {text: 'Along with brochure email is sent to HB collector email.'}
-        //    ];
-        //
-        //    seed.forEach(add);
-        //}
-
         function persist() {
             $http.put("/facts", JSON.stringify(facts));
             //localStorage.setItem("facts", JSON.stringify(facts));

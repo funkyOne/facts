@@ -1,9 +1,11 @@
 class FactsCtrl {
-    constructor(Facts, $modal, $rootScope, $http) {
+    constructor(Facts, $modal, $rootScope, $http, $sceDelegate, $sce) {
         this.Facts = Facts;
         this.$modal = $modal;
         this.$rootScope = $rootScope;
         this.$http = $http;
+        this.$sceDelegate = $sceDelegate;
+        this.$sce = $sce;
 
         this.updateCategories();
     }
@@ -25,6 +27,10 @@ class FactsCtrl {
         this.$http.get("/facts/" + fact.id + "/issues").success((issues)=> {
             fact.issues = issues;
         })
+    }
+
+    makeTrusted(html){
+        return this.$sceDelegate.trustAs(this.$sce.HTML, html);
     }
 
     addFact () {
@@ -61,5 +67,5 @@ class FactsCtrl {
         this.Facts.update(fact);
     }
 }
-FactsCtrl.$inject = ["Facts", "$modal", "$rootScope", "$http"];
+FactsCtrl.$inject = ["Facts", "$modal", "$rootScope", "$http", "$sceDelegate", "$sce"];
 angular.module("p7").controller("FactsCtrl", FactsCtrl);
