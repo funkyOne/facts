@@ -4,7 +4,7 @@ let express = require('express');
 let router = express.Router();
 let MongoClient = require('mongodb').MongoClient;
 let _ = require('lodash');
-let storeIssue = require('../../src/import').storeIssue;
+let storeIssue = require('../import').storeIssue;
 
 router.get('/', function (req, res) {
     let db = req.app.get('db');

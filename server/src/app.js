@@ -11,8 +11,8 @@ let bodyParser = require('body-parser');
 let pgConnection = require('./creds').pg_connection;
 let issueSync = require('./issue-sync');
 
-let routes = require('././index');
-let facts = require('././facts');
+let routes = require('./routes/index');
+let facts = require('./routes/facts');
 
 let massive = require('massive');
 
