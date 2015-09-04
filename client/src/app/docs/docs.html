@@ -1,0 +1,32 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <ul>
+                <li ng-class="{selected:vm.selectedCategory === category}" ng-repeat="category in vm.categories track by category.id">
+                    <a ng-click="vm.selectCategory(category)">{{ ::category.title }}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <div class="fact fact--{{fact.state.title}}" ng-repeat="fact in vm.facts track by fact.id">
+
+                <div class="fact-edit-btns">
+                    <button class="btn-xs btn btn-danger" ng-click="vm.delete(fact,category)">&times;</button>
+                    <button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">edit</button>
+                    <button class="btn-xs btn btn-primary" ng-click="vm.hide(fact)">hide</button>
+                    <!--<button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">create issue</button>-->
+                </div>
+
+                <span ng-bind-html="vm.makeTrusted(fact.html)"></span>
+
+                <div class="fact__issues">
+                    <div class="fact__issue fact__issue--{{issue.fields.status.name}}"
+                         ng-repeat="issue in fact.issues">
+                        <a href="{{issue.self}}">{{issue.key}} - {{issue.fields.summary}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
