@@ -1,6 +1,12 @@
 angular.module('p7', ["ngRoute", "ui.bootstrap", "ngTagsInput", 'ngSanitize'])
     .config(['$routeProvider', ($routeProvider) => {
 
+
+        $routeProvider.when('/', {
+            templateUrl: '/docs/docs.html',
+            controller: 'DocsCtrl as vm'
+        });
+
         $routeProvider.when('/facts', {
             templateUrl: '/facts/facts.html',
             controller: 'FactsCtrl as vm',
@@ -11,7 +17,7 @@ angular.module('p7', ["ngRoute", "ui.bootstrap", "ngTagsInput", 'ngSanitize'])
             }
         });
 
-        $routeProvider.otherwise({redirectTo: '/facts'});
+        $routeProvider.otherwise({redirectTo: '/'});
     }])
     .directive("editor", function () {
         return {
