@@ -5,7 +5,7 @@ let nodemon = require('gulp-nodemon');
 
 gulp.task('default', function () {
     nodemon({
-        script: 'bin/www',
+        script: 'index.js',
         ext: 'js',
         ignore: ['node_modules/*']
     }).on('restart', function () {
