@@ -2,5 +2,6 @@
 
 let massive = require('massive');
 let pgConnection = require('./creds').pg_connection;
+let coMassive = require('./co-massive');
 
-module.exports = massive.connectSync({connectionString: pgConnection});
+module.exports = coMassive(massive.connectSync({connectionString: pgConnection}));
