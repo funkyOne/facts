@@ -10,6 +10,7 @@ const koa = require('koa');
 const path = require('path');
 const factRoutes = require('./routes/facts');
 const categoryRoutes = require('./routes/categories');
+let issueSync = require('./issue-sync');
 
 const app = koa();
 const clientProjectRoot = path.join(__dirname, '../..', 'client');
@@ -24,3 +25,5 @@ categoryRoutes(app);
 app.listen(3000, function () {
     console.log('Listening on port', 3000);
 });
+
+issueSync.initialize();
