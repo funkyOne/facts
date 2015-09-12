@@ -7,24 +7,32 @@ const methods = [
     'run'
 ];
 
-function thenifyTable(table){
-    return thenifyAll(table, {}, ['find', 'save', 'update']);
+const tableMethods = ['find', 'save', 'update','findOne', 'insert'];
+
+function thenifyTable(table) {
+    return thenifyAll(table, {}, tableMethods);
 }
+
+function thenify(source, methods) {
+    let result = {};
+
+    methods.forEach(name => {
+        if (!source[name]) return;
+
+        result[name] = thunk(source[name]).bind(source);
+    });
+
+    return result;
+}
+
 
 function thenifyDb(db){
 
-    let thenifiedDb = {};
+    let thenifiedDb = thenify(db, methods);
 
     for (let table of db.tables){
-
-        thenifiedDb[table.name] = thenifyTable(table);
+        thenifiedDb[table.name] = thenify(table, tableMethods);
     }
-
-    methods.forEach(function(name){
-        if (!db[name]) return;
-
-        thenifiedDb[name] = thunk(db[name]).bind(db);
-    });
 
     return thenifiedDb;
 }
