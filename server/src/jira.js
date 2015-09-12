@@ -106,10 +106,11 @@ function batchedSearch(jql, cb, startAt, batchSize) {
 function toIssue(jiraIssue) {
     return {
         'jira_id': jiraIssue.id,
-        'epic_key': jiraIssue.fields.customfield_10006,
+        'epic_key': jiraIssue.fields[epicField],
         'text': jiraIssue.fields.description,
         'title': jiraIssue.fields.summary,
-        'key': jiraIssue.key
+        'key': jiraIssue.key,
+        'issue_type':Number(jiraIssue.fields.issuetype.id)
     };
 }
 
