@@ -5,7 +5,7 @@ const thunk = require('thunkify');
 const dbMethods = ['run'];
 const tableMethods = ['find', 'save', 'update', 'findOne', 'insert'];
 
-function thenify(source, methods) {
+function thunkifyAll(source, methods) {
     let result = {};
 
     methods.forEach(name => {
@@ -17,16 +17,16 @@ function thenify(source, methods) {
     return result;
 }
 
-function thenifyDb(db) {
+function thunkifyDb(db) {
 
-    let thenifiedDb = thenify(db, dbMethods);
+    let thenifiedDb = thunkifyAll(db, dbMethods);
 
     for (let table of db.tables) {
-        thenifiedDb[table.name] = thenify(table, tableMethods);
+        thenifiedDb[table.name] = thunkifyAll(table, tableMethods);
     }
 
     return thenifiedDb;
 }
 
 
-module.exports = thenifyDb;
+module.exports = thunkifyDb;
