@@ -28,7 +28,6 @@
     "request": "^2.67.0",
     "send": "^0.13.0",
     "serve-favicon": "~2.2.0",
-    "thenify-all": "^1.6.0",
     "thunkify": "^2.1.2"
   },
   "devDependencies": {

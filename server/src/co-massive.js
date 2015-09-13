@@ -1,17 +1,9 @@
 'use strict';
 
 const thunk = require('thunkify');
-const thenifyAll = require('thenify-all');
 
-const methods = [
-    'run'
-];
-
-const tableMethods = ['find', 'save', 'update','findOne', 'insert'];
-
-function thenifyTable(table) {
-    return thenifyAll(table, {}, tableMethods);
-}
+const dbMethods = ['run'];
+const tableMethods = ['find', 'save', 'update', 'findOne', 'insert'];
 
 function thenify(source, methods) {
     let result = {};
@@ -25,12 +17,11 @@ function thenify(source, methods) {
     return result;
 }
 
+function thenifyDb(db) {
 
-function thenifyDb(db){
+    let thenifiedDb = thenify(db, dbMethods);
 
-    let thenifiedDb = thenify(db, methods);
-
-    for (let table of db.tables){
+    for (let table of db.tables) {
         thenifiedDb[table.name] = thenify(table, tableMethods);
     }
 
