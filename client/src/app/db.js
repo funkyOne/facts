@@ -99,21 +99,33 @@ angular.module("p7")
         };
 
         return api;
-    }])
-    .service("Facts", ["$q", "$http", function ($q, $http) {
-        var categories;
-
-        var req = $http.get("/facts").success(function (data) {
-            categories = data;
-        });
-
-        return {
-            categories: function () {
-                return categories;
-            },
-            update: function (fact) {
-                return $http.put("/facts/" + fact.id, fact)
-            },
-            initialized: req
-        };
     }]);
+
+class FactService {
+    constructor($q, $http) {
+        this.$q = $q;
+        this.$http = $http;
+
+        this.initialized = $http.get("/facts").success(data => {
+            this.categories = data;
+        });
+    }
+
+    update(fact) {
+        return this.$http.put(`/facts/${fact.id}`, fact)
+    }
+
+    removeFactFromCategory(fact, category) {
+        var index = category.facts.findIndex(f=> f.id === fact.id);
+
+        if (index === -1) {
+            return;
+        }
+
+        category.facts.splice(index, 1);
+        return this.$http.delete(`/categories/${category.id}/facts`, {params: {fact_id: fact.id}});
+    }
+}
+
+FactService.$inject = ["$q", "$http"];
+angular.module("p7").service("Facts", FactService);
