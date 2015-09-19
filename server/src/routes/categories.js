@@ -16,9 +16,17 @@ function router(app) {
             'select fact.* ' +
             'from fact ' +
             'join fact_category fc ' +
-            'on fact.id=fc.fact_id and fc.category_id=$1',[id]);
+            'on fact.id=fc.fact_id and fc.category_id=$1 and is_deleted=false',[id]);
 
         this.body = facts;
+    }));
+
+
+    app.use(route.del('/categories/:id/facts', function*(id) {
+        const factId = this.query.fact_id;
+        yield db.fact_category.update({fact_id: factId, category_id:id, is_deleted:true});
+
+        this.status = 200;
     }));
 }
 
