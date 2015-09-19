@@ -1,14 +1,17 @@
 class DocsCtrl {
-    constructor($scope, $rootScope, $http, $sceDelegate, $sce, $modal) {
+    constructor($scope, $rootScope, $http, $sceDelegate, $sce, $modal, $window, Facts) {
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.$http = $http;
         this.$sceDelegate = $sceDelegate;
         this.$sce = $sce;
         this.$modal = $modal;
+        this.$window = $window;
+        this.factService = Facts;
 
-        $http.get("/categories").success(data => {
-            this.categories = data;
+        this.factService.initialized.then(()=>{
+            this.updateCategories();
+            this.selectCategory(this.categories[0]);
         });
     }
 
@@ -26,7 +29,7 @@ class DocsCtrl {
 
     hide(fact) {
         fact.hidden = true;
-        this.Facts.update(fact);
+        this.factService.update(fact);
     }
 
     edit (fact) {
@@ -47,9 +50,17 @@ class DocsCtrl {
     };
 
     updateCategories(){
-        this.categories = this.Facts.categories();
+        this.categories = this.factService.categories;
+    }
+
+    removeFactFromCategory(fact, category) {
+        if (this.$window.confirm(`Are you sure you want to remove fact (${fact.id}) from ${category.title}?`))
+        {
+            this.factService.removeFactFromCategory(fact, category);
+            this.updateCategories();
+        }
     }
 }
 
-DocsCtrl.$inject = ["$scope", "$rootScope", "$http", "$sceDelegate", "$sce", "$modal"];
+DocsCtrl.$inject = ["$scope", "$rootScope", "$http", "$sceDelegate", "$sce", "$modal", "$window", 'Facts'];
 angular.module("p7").controller("DocsCtrl", DocsCtrl);

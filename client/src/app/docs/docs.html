@@ -12,7 +12,7 @@
             <div class="fact fact--{{fact.state.title}}" ng-repeat="fact in vm.facts track by fact.id">
 
                 <div class="fact-edit-btns">
-                    <button class="btn-xs btn btn-danger" ng-click="vm.delete(fact,category)">&times;</button>
+                    <button class="btn-xs btn btn-danger" ng-click="vm.removeFactFromCategory(fact, vm.selectedCategory)">&times;</button>
                     <button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">edit</button>
                     <button class="btn-xs btn btn-primary" ng-click="vm.hide(fact)">hide</button>
                     <!--<button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">create issue</button>-->
