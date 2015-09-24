@@ -2,7 +2,7 @@
 
 const thunk = require('thunkify');
 
-const dbMethods = ['run'];
+const dbMethods = ['run', 'reoder_fact'];
 const tableMethods = ['find', 'save', 'update', 'findOne', 'insert'];
 
 function thunkifyAll(source, methods) {

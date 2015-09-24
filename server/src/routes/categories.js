@@ -16,15 +16,32 @@ function router(app) {
             'select fact.* ' +
             'from fact ' +
             'join fact_category fc ' +
-            'on fact.id=fc.fact_id and fc.category_id=$1 and is_deleted=false',[id]);
+            'on fact.id=fc.fact_id and fc.category_id=$1 and is_deleted=false', [id]);
 
         this.body = facts;
     }));
 
-
     app.use(route.del('/categories/:id/facts', function*(id) {
         const factId = this.query.fact_id;
-        yield db.fact_category.update({fact_id: factId, category_id:id, is_deleted:true});
+        yield db.fact_category.update({fact_id: factId, category_id: id, is_deleted: true});
+
+        this.status = 200;
+    }));
+
+    app.use(route.del('/categories/:id/facts/reorder', function*(id) {
+        const factId = this.query.fact_id;
+        let before = true;
+        let anchorId;
+
+        if (this.query.before_id) {
+            anchorId = this.query.before_id;
+        }
+        else {
+            before = false;
+            anchorId = this.query.after_id;
+        }
+
+        yield db.reoder_fact([factId, id, anchorId, before]);
 
         this.status = 200;
     }));
