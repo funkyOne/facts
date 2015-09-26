@@ -38,14 +38,14 @@ CREATE FUNCTION build_facts() RETURNS void
     BEGIN     
 
     WITH CTE AS (SELECT DISTINCT epic_key FROM issue WHERE epic_key is not null)
-    INSERT INTO category (title,epic_key)
+    INSERT INTO topic (title,epic_key)
 	SELECT title,key
 	FROM issue join CTE on issue.key=CTE.epic_key;
       
  FOR issue_r IN
 	SELECT i.id,text,c.id as cat_id 
 	FROM issue i
-	LEFT JOIN category c on i.epic_key = c.epic_key
+	LEFT JOIN topic c on i.epic_key = c.epic_key
 	where i.text IS NOT NULL
    LOOP	
 	IF NOT EXISTS (SELECT 1 from fact_issue where issue_id=issue_r.id) THEN	
@@ -62,7 +62,7 @@ CREATE FUNCTION build_facts() RETURNS void
 		VALUES (last_id, issue_r.id);
 		
 		if(issue_r.cat_id IS NOT NULL) THEN		
-			INSERT INTO fact_category(fact_id,category_id)
+			INSERT INTO fact_topic(fact_id,topic_id)
 			VALUES (last_id,issue_r.cat_id);
 		END IF;
 
@@ -79,10 +79,10 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: category; Type: TABLE; Schema: public; Owner: facts_app; Tablespace: 
+-- Name: topic; Type: TABLE; Schema: public; Owner: facts_app; Tablespace:
 --
 
-CREATE TABLE category (
+CREATE TABLE topic (
     id integer NOT NULL,
     title text,
     epic_key character varying(10),
@@ -91,13 +91,13 @@ CREATE TABLE category (
 );
 
 
-ALTER TABLE category OWNER TO facts_app;
+ALTER TABLE topic OWNER TO facts_app;
 
 --
--- Name: category_id_seq; Type: SEQUENCE; Schema: public; Owner: facts_app
+-- Name: topic_id_seq; Type: SEQUENCE; Schema: public; Owner: facts_app
 --
 
-CREATE SEQUENCE category_id_seq
+CREATE SEQUENCE topic_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -105,13 +105,13 @@ CREATE SEQUENCE category_id_seq
     CACHE 1;
 
 
-ALTER TABLE category_id_seq OWNER TO facts_app;
+ALTER TABLE topic_id_seq OWNER TO facts_app;
 
 --
--- Name: category_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: facts_app
+-- Name: topic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: facts_app
 --
 
-ALTER SEQUENCE category_id_seq OWNED BY category.id;
+ALTER SEQUENCE topic_id_seq OWNED BY topic.id;
 
 
 --
@@ -131,18 +131,18 @@ CREATE TABLE fact (
 ALTER TABLE fact OWNER TO facts_app;
 
 --
--- Name: fact_category; Type: TABLE; Schema: public; Owner: facts_app; Tablespace: 
+-- Name: fact_topic; Type: TABLE; Schema: public; Owner: facts_app; Tablespace:
 --
 
-CREATE TABLE fact_category (
+CREATE TABLE fact_topic (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     fact_id integer NOT NULL,
-    category_id integer NOT NULL
+    topic_id integer NOT NULL
 );
 
 
-ALTER TABLE fact_category OWNER TO facts_app;
+ALTER TABLE fact_topic OWNER TO facts_app;
 
 --
 -- Name: fact_id_seq; Type: SEQUENCE; Schema: public; Owner: facts_app
@@ -224,7 +224,7 @@ ALTER SEQUENCE issue_id_seq OWNED BY issue.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: facts_app
 --
 
-ALTER TABLE ONLY category ALTER COLUMN id SET DEFAULT nextval('category_id_seq'::regclass);
+ALTER TABLE ONLY topic ALTER COLUMN id SET DEFAULT nextval('topic_id_seq'::regclass);
 
 
 --
@@ -242,19 +242,19 @@ ALTER TABLE ONLY issue ALTER COLUMN id SET DEFAULT nextval('issue_id_seq'::regcl
 
 
 --
--- Name: category_pkey; Type: CONSTRAINT; Schema: public; Owner: facts_app; Tablespace: 
+-- Name: topic_pkey; Type: CONSTRAINT; Schema: public; Owner: facts_app; Tablespace:
 --
 
-ALTER TABLE ONLY category
-    ADD CONSTRAINT category_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY topic
+    ADD CONSTRAINT topic_pkey PRIMARY KEY (id);
 
 
 --
--- Name: fact_category_pkey; Type: CONSTRAINT; Schema: public; Owner: facts_app; Tablespace: 
+-- Name: fact_topic_pkey; Type: CONSTRAINT; Schema: public; Owner: facts_app; Tablespace:
 --
 
-ALTER TABLE ONLY fact_category
-    ADD CONSTRAINT fact_category_pkey PRIMARY KEY (fact_id, category_id);
+ALTER TABLE ONLY fact_topic
+    ADD CONSTRAINT fact_topic_pkey PRIMARY KEY (fact_id, topic_id);
 
 
 --
@@ -285,7 +285,7 @@ ALTER TABLE ONLY issue
 -- Name: uq_epic_key; Type: CONSTRAINT; Schema: public; Owner: facts_app; Tablespace: 
 --
 
-ALTER TABLE ONLY category
+ALTER TABLE ONLY topic
     ADD CONSTRAINT uq_epic_key UNIQUE (epic_key);
 
 
@@ -298,19 +298,19 @@ ALTER TABLE ONLY issue
 
 
 --
--- Name: fact_category_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: facts_app
+-- Name: fact_topic_topic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: facts_app
 --
 
-ALTER TABLE ONLY fact_category
-    ADD CONSTRAINT fact_category_category_id_fkey FOREIGN KEY (category_id) REFERENCES category(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY fact_topic
+    ADD CONSTRAINT fact_topic_topic_id_fkey FOREIGN KEY (topic_id) REFERENCES topic(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: fact_category_fact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: facts_app
+-- Name: fact_topic_fact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: facts_app
 --
 
-ALTER TABLE ONLY fact_category
-    ADD CONSTRAINT fact_category_fact_id_fkey FOREIGN KEY (fact_id) REFERENCES fact(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY fact_topic
+    ADD CONSTRAINT fact_topic_fact_id_fkey FOREIGN KEY (fact_id) REFERENCES fact(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

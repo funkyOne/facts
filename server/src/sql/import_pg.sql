@@ -6,7 +6,7 @@ DECLARE
 	issue_r RECORD;  
 BEGIN
     WITH CTE AS (SELECT DISTINCT epic_key FROM issue WHERE epic_key is not null)
-    INSERT INTO category (title, epic_key)
+    INSERT INTO topic (title, epic_key)
 	SELECT title, key
 	FROM issue join CTE on issue.key=CTE.epic_key;
 
@@ -14,7 +14,7 @@ BEGIN
     FOR issue_r IN
 	SELECT i.id, text, c.id as cat_id
 	FROM issue i
-	LEFT JOIN category c on i.epic_key = c.epic_key
+	LEFT JOIN topic c on i.epic_key = c.epic_key
 	WHERE i.text IS NOT NULL
     LOOP
         -- create fact for issue, if not exists
@@ -28,7 +28,7 @@ BEGIN
             VALUES (last_id, issue_r.id);
 
             if(issue_r.cat_id IS NOT NULL) THEN
-                INSERT INTO fact_category(fact_id,category_id)
+                INSERT INTO fact_topic(fact_id,topic_id)
                 VALUES (last_id,issue_r.cat_id);
             END IF;
 

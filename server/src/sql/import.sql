@@ -2,7 +2,7 @@
 as
 (SELECT DISTINCT epic_key FROM issue WHERE epic_key is not null)
 
-INSERT INTO category (title,epic_key)
+INSERT INTO topic (title,epic_key)
 SELECT title,key
 FROM issue join CTE on issue.key=CTE.epic_key
 
@@ -14,7 +14,7 @@ DECLARE @factId int
 
 DECLARE vend_cursor CURSOR
 FOR SELECT i.id,[text],c.id as cat_id FROM dbo.issue i
-LEFT JOIN category c on i.epic_key = c.epic_key
+LEFT JOIN topic c on i.epic_key = c.epic_key
 where i.[text] IS NOT NULL
 
 OPEN vend_cursor
@@ -40,7 +40,7 @@ BEGIN
 		
 		if(@cat_id IS NOT NULL)
 		BEGIN
-			INSERT INTO fact_category
+			INSERT INTO fact_topic
 			SELECT @factId,@cat_id
 		END
 
