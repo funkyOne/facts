@@ -9,7 +9,7 @@ const mount = require('koa-mount');
 const koa = require('koa');
 const path = require('path');
 const factRoutes = require('./routes/facts');
-const categoryRoutes = require('./routes/categories');
+const topicRoutes = require('./routes/topics');
 let issueSync = require('./issue-sync');
 
 const app = koa();
@@ -20,7 +20,7 @@ app.use(serve(path.join(clientProjectRoot, 'dist')));
 app.use(mount('/bower_components', serve(path.join(clientProjectRoot, 'bower_components'))));
 
 factRoutes(app);
-categoryRoutes(app);
+topicRoutes(app);
 
 app.listen(3000, function () {
     console.log('Listening on port', 3000);

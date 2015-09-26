@@ -50,11 +50,11 @@ module.exports = {
 
 // documentation view
 
-// get list of categories with facts ordered by ui
+// get list of topics with facts ordered by ui
 
 // get issues associated with  fact
 // save fact + save issue
-// reorder fact in category
-// remove fact from one category
+// reorder fact in topic
+// remove fact from one topic
 
 

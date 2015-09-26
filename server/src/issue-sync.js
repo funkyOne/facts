@@ -51,43 +51,43 @@ function initialize() {
 }
 
 /**
- * converts issue to fact or category and saves
+ * converts issue to fact or topic and saves
  * @param issue an issue to process
  */
 function* convertIssue(issue) {
     if (issue.issue_type === EpicIssueType) {
-        let cat = yield db.category.findOne({epic_key: issue.key});
+        let cat = yield db.topic.findOne({epic_key: issue.key});
         if (cat) {
             return;
         }
 
-        yield db.category.insert({title: issue.title, epic_key: issue.key});
+        yield db.topic.insert({title: issue.title, epic_key: issue.key});
     }
     else {
 
         let factIssue = yield db.fact_issue.findOne({issue_id: issue.id});
 
         if (factIssue) {
-            yield addFactToCategory(factIssue.fact_id, issue.epic_key);
+            yield addFactToTopic(factIssue.fact_id, issue.epic_key);
         }
         else {
             let inserted = yield db.fact.insert({text: issue.text, html: issue.text && marked(issue.text)});
 
             yield db.fact_issue.insert({issue_id: issue.id, fact_id: inserted.id});
-            yield addFactToCategory(inserted.id, issue.epic_key);
+            yield addFactToTopic(inserted.id, issue.epic_key);
         }
     }
 }
 
-function* addFactToCategory(fact_id, epic_key) {
+function* addFactToTopic(fact_id, epic_key) {
 
-    let category = yield db.category.findOne({epic_key: epic_key});
+    let topic = yield db.topic.findOne({epic_key: epic_key});
 
-    if (!category) {
-        throw new Error(`couldn't find category associated with epic_key ${epic_key}`);
+    if (!topic) {
+        throw new Error(`couldn't find topic associated with epic_key ${epic_key}`);
     }
 
-    yield db.fact_category.insert({category_id: category.id, fact_id: fact_id});
+    yield db.fact_topic.insert({topic_id: topic.id, fact_id: fact_id});
 }
 
 //undone
