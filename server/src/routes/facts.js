@@ -10,17 +10,17 @@ function factsRouter(app) {
 
     app.use(route.get('/facts', function*() {
         let facts = yield db.fact.find({});
-        let categories = yield db.category.find({});
-        let factCategory = yield db.fact_category.find({});
+        let topics = yield db.topic.find({});
+        let factTopic = yield db.fact_topic.find({});
 
         let factsIndexed = _.indexBy(facts, f=>f.id);
-        let cat_facts = _.groupBy(factCategory, c=> c.category_id);
+        let cat_facts = _.groupBy(factTopic, c=> c.topic_id);
 
-        _.forEach(categories, function (cat) {
+        _.forEach(topics, function (cat) {
             cat.facts = _.map(cat_facts[cat.id], fc => factsIndexed[fc.fact_id]);
         });
 
-        this.body = categories;
+        this.body = topics;
     }));
 
     app.use(route.get('/facts/:id/issues', function*(id) {

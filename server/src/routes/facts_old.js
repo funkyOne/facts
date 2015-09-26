@@ -11,22 +11,22 @@ router.get('/', function (req, res) {
     db.fact.find({}, function (err, facts) {
         err && console.error(err);
 
-        db.category.find({}, function (err, categories) {
+        db.topic.find({}, function (err, topics) {
             err && console.error(err);
 
-            db.fact_category.find({}, function (err, fact_category) {
+            db.fact_topic.find({}, function (err, fact_topic) {
                 err && console.error(err);
 
                 let factsIndexed = _.indexBy(facts, f=>f.id);
-                let cat_facts = _.groupBy(fact_category, c=> c.category_id);
+                let cat_facts = _.groupBy(fact_topic, c=> c.topic_id);
 
-                _.forEach(categories, function (cat) {
+                _.forEach(topics, function (cat) {
                     cat.facts = _.map(cat_facts[cat.id], (function (fc) {
                         return factsIndexed[fc.fact_id];
                     }));
                 });
 
-                res.send(categories);
+                res.send(topics);
             });
         });
     });
@@ -114,7 +114,7 @@ function map(db) {
 
                 let grouped = _.groupBy(issues, 'epic');
 
-                let categories = [];
+                let topics = [];
                 _.forEach(grouped, function (group, name) {
                     if (!name)
                         return;
@@ -129,12 +129,12 @@ function map(db) {
                     //epic doesn't exist
                     if (epic) {
                         cat.title = epic.summary;
-                        categories.push(cat);
+                        topics.push(cat);
                     }
                     else {
                         let promise = storeIssue(db, name).then(function (issue) {
                             cat.title = issue.fields.summary;
-                            categories.push(cat);
+                            topics.push(cat);
                         });
 
                         promises.push(promise);
@@ -144,7 +144,7 @@ function map(db) {
 
                 Promise.all(promises).then(function () {
                     //resolve();
-                    resolve(categories);
+                    resolve(topics);
                 });
             });
     });
