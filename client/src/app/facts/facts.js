@@ -7,16 +7,16 @@ class FactsCtrl {
         this.$sceDelegate = $sceDelegate;
         this.$sce = $sce;
 
-        this.updateCategories();
+        this.updateTopics();
     }
 
-    updateCategories(){
-        this.categories = this.Facts.categories();
+    updateTopics(){
+        this.topics = this.Facts.topics();
     }
 
-    delete(fact, category) {
-        this.Facts.deleteFact(fact, category);
-        this.updateCategories();
+    delete(fact, topic) {
+        this.Facts.deleteFact(fact, topic);
+        this.updateTopics();
     }
 
     getDetails(fact) {
@@ -41,7 +41,7 @@ class FactsCtrl {
         });
 
         modalInstance.result.then(()=> {
-            this.updateCategories();
+            this.updateTopics();
         });
     };
 
@@ -58,7 +58,7 @@ class FactsCtrl {
         });
 
         modalInstance.result.then(()=> {
-            this.updateCategories();
+            this.updateTopics();
         });
     };
 

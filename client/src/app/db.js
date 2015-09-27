@@ -11,10 +11,10 @@ angular.module("p7")
             initialize();
         });
 
-        var categories = [];
+        var topics = [];
 
         function initialize() {
-            facts.forEach(addFactCats);
+            facts.forEach(addFactTopics);
         }
 
         function add(fact) {
@@ -22,22 +22,22 @@ angular.module("p7")
             var md = new Remarkable();
             fact.html = md.render(fact.text);
             facts[fact.id] = fact;
-            addFactCats(fact);
+            addFactTopics(fact);
         }
 
-        function addFactCats(fact) {
-            fact.categories && fact.categories.forEach(addCat)
+        function addFactTopics(fact) {
+            fact.topics && fact.topics.forEach(addTopic)
         }
 
-        function factsForCategory(cat) {
+        function factsForTopic(topic) {
             return _.filter(facts, function (fact) {
-                return fact.categories && _.includes(fact.categories, cat);
+                return fact.topics && _.includes(fact.topics, topic);
             })
         }
 
-        function addCat(cat) {
-            if (!_.includes(categories, cat)) {
-                categories.push(cat);
+        function addTopic(topic) {
+            if (!_.includes(topics, topic)) {
+                topics.push(topic);
             }
         }
 
@@ -55,12 +55,12 @@ angular.module("p7")
             all: function () {
                 return facts;
             },
-            categories: function () {
-                return categories.map(function (cat) {
+            topics: function () {
+                return topics.map(function (topic) {
                     return {
-                        key: cat,
-                        title: _.capitalize(cat),
-                        facts: factsForCategory(cat)
+                        key: topic,
+                        title: _.capitalize(topic),
+                        facts: factsForTopic(topic)
                     }
                 })
             },
@@ -77,11 +77,11 @@ angular.module("p7")
                 facts[id].removed = true;
                 persist();
             },
-            deleteFact: function (fact, category) {
+            deleteFact: function (fact, topic) {
                 var f = getFact(fact.id);
 
-                _.remove(f.categories, function (c) {
-                    return c === category.key
+                _.remove(f.topics, function (c) {
+                    return c === topic.key
                 });
                 persist();
             },
@@ -89,11 +89,11 @@ angular.module("p7")
                 facts = [];
                 persist();
             },
-            findCategories: function (text) {
+            findTopics: function (text) {
                 var re = new RegExp(text);
 
-                return $q.when(_.filter(categories, function (cat) {
-                    return re.test(cat);
+                return $q.when(_.filter(topics, function (topic) {
+                    return re.test(topic);
                 }))
             }
         };
@@ -107,7 +107,7 @@ class FactService {
         this.$http = $http;
 
         this.initialized = $http.get("/facts").success(data => {
-            this.categories = data;
+            this.topics = data;
         });
     }
 
@@ -115,15 +115,15 @@ class FactService {
         return this.$http.put(`/facts/${fact.id}`, fact)
     }
 
-    removeFactFromCategory(fact, category) {
-        var index = category.facts.findIndex(f=> f.id === fact.id);
+    removeFactFromTopic(fact, topic) {
+        var index = topic.facts.findIndex(f=> f.id === fact.id);
 
         if (index === -1) {
             return;
         }
 
-        category.facts.splice(index, 1);
-        return this.$http.delete(`/categories/${category.id}/facts`, {params: {fact_id: fact.id}});
+        topic.facts.splice(index, 1);
+        return this.$http.delete(`/topics/${topic.id}/facts`, {params: {fact_id: fact.id}});
     }
 }
 

@@ -69,14 +69,14 @@
 
             <hr/>
 
-            <div ng-repeat="category in vm.categories track by $index">
-                <h2>{{category.title}}</h2>
+            <div ng-repeat="topic in vm.topics track by $index">
+                <h2>{{topic.title}}</h2>
 
-                <div class="fact fact--{{fact.state.title}}" ng-repeat="fact in category.facts track by fact.id | filter:{hidden:'false'}"
+                <div class="fact fact--{{fact.state.title}}" ng-repeat="fact in topic.facts track by fact.id | filter:{hidden:'false'}"
                      ng-mouseover="vm.getDetails(fact)">
 
                     <div class="fact-edit-btns">
-                        <button class="btn-xs btn btn-danger" ng-click="vm.delete(fact,category)">&times;</button>
+                        <button class="btn-xs btn btn-danger" ng-click="vm.delete(fact,topic)">&times;</button>
                         <button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">edit</button>
                         <button class="btn-xs btn btn-primary" ng-click="vm.hide(fact)">hide</button>
                         <!--<button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">create issue</button>-->

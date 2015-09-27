@@ -2,17 +2,17 @@
     <div class="row">
         <div class="col-md-4">
             <ul>
-                <li ng-class="{selected:vm.selectedCategory === category}" ng-repeat="category in vm.categories track by category.id">
-                    <a ng-click="vm.selectCategory(category)">{{ ::category.title }}</a>
+                <li ng-class="{selected:vm.selectedTopic === topic}" ng-repeat="topic in vm.topics track by topic.id">
+                    <a ng-click="vm.selectTopic(topic)">{{ ::topic.title }}</a>
                 </li>
             </ul>
         </div>
         <div class="col-md-8">
-            <h1>{{vm.selectedCategory.title}}</h1>
+            <h1>{{vm.selectedTopic.title}}</h1>
             <div class="fact fact--{{fact.state.title}}" ng-repeat="fact in vm.facts track by fact.id">
 
                 <div class="fact-edit-btns">
-                    <button class="btn-xs btn btn-danger" ng-click="vm.removeFactFromCategory(fact, vm.selectedCategory)">&times;</button>
+                    <button class="btn-xs btn btn-danger" ng-click="vm.removeFactFromTopic(fact, vm.selectedTopic)">&times;</button>
                     <button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">edit</button>
                     <button class="btn-xs btn btn-primary" ng-click="vm.hide(fact)">hide</button>
                     <!--<button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">create issue</button>-->

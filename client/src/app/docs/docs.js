@@ -10,8 +10,8 @@ class DocsCtrl {
         this.factService = Facts;
 
         this.factService.initialized.then(()=>{
-            this.updateCategories();
-            this.selectCategory(this.categories[0]);
+            this.updateTopics();
+            this.selectTopic(this.topics[0]);
         });
     }
 
@@ -19,10 +19,10 @@ class DocsCtrl {
         return this.$sceDelegate.trustAs(this.$sce.HTML, html);
     }
 
-    selectCategory(category) {
-        this.selectedCategory = category;
+    selectTopic(topic) {
+        this.selectedTopic = topic;
 
-        this.$http.get(`/categories/${category.id}/facts`, {cache: true}).success(data => {
+        this.$http.get(`/topics/${topic.id}/facts`, {cache: true}).success(data => {
             this.facts = data;
         });
     }
@@ -45,19 +45,19 @@ class DocsCtrl {
         });
 
         modalInstance.result.then(()=> {
-            this.updateCategories();
+            this.updateTopics();
         });
     };
 
-    updateCategories(){
-        this.categories = this.factService.categories;
+    updateTopics(){
+        this.topics = this.factService.topics;
     }
 
-    removeFactFromCategory(fact, category) {
-        if (this.$window.confirm(`Are you sure you want to remove fact (${fact.id}) from ${category.title}?`))
+    removeFactFromTopic(fact, topic) {
+        if (this.$window.confirm(`Are you sure you want to remove fact (${fact.id}) from ${topic.title}?`))
         {
-            this.factService.removeFactFromCategory(fact, category);
-            this.updateCategories();
+            this.factService.removeFactFromTopic(fact, topic);
+            this.updateTopics();
         }
     }
 }

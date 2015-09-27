@@ -8,7 +8,7 @@ angular.module("p7").controller("EditFactCtrl", ($scope, $modalInstance, Facts) 
 
         //fact.state = $scope.state;
         fact.html = md.render(fact.text);
-        //fact.categories = _.pluck($scope.categories, "text");
+        //fact.topics = _.pluck($scope.topics, "text");
 
         Facts.update(fact);
         $modalInstance.close();
@@ -18,7 +18,7 @@ angular.module("p7").controller("EditFactCtrl", ($scope, $modalInstance, Facts) 
         $modalInstance.dismiss();
     };
 
-    $scope.loadCategories = function (cat) {
-        return Facts.findCategories(cat);
+    $scope.loadTopics = function (topic) {
+        return Facts.findTopics(topic);
     }
 });
