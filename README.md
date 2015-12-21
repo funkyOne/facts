@@ -6,13 +6,12 @@ It requires you to rethink the way you create issues. Instead of "this button sh
 
 Also documentation starts to reflect current state of the application. So it's becomes visible what part of the app is done and working, what are in progress, what is broken.
 
-### What is fact?
-A fact is actually a fact. Some piece of information about the system under documentation. 
-- fact can have multiple issues related to it
-- fact can have state identifying it's impementation stage
-
 ##how to run
 
+###start mongo
+```
+    C:\mongodb\bin\mongod.exe --dbpath C:\mongodb\bin\data
+```
 ###start express server
 from server folder:
 ```
