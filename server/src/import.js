@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * This module is responsible for loading issues from JIRA to local mongo
+ * for later importing into main database
+ */
+
 // Retrieve
 let MongoClient = require('mongodb').MongoClient;
 let _ = require('lodash');

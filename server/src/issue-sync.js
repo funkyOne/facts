@@ -1,19 +1,26 @@
 'use strict';
 
+/**
+ * This module contains functions to import 
+ */
+
 const Encoder = require('node-html-encoder').Encoder;
-let PGPubsub = require('pg-pubsub');
-let jira = require('./jira');
+const PGPubsub = require('pg-pubsub');
+const jira = require('./jira');
 const db = require('./db');
 const co = require('co');
-
-let async = require('async');
-let marked = require('marked');
-let pgConnection = require('./creds').pg_connection;
-let pubsubInstance = new PGPubsub(pgConnection);
-let encoder = new Encoder('entity');
+const async = require('async');
+const marked = require('marked');
+const pgConnection = require('./creds').pg_connection;
+const pubsubInstance = new PGPubsub(pgConnection);
+const encoder = new Encoder('entity');
 
 const EpicIssueType = 6;
 
+/**
+ * Initializes the service
+ * Start listening for new issues and imports all existing
+ */
 function initialize() {
 
     //add issue message handler
@@ -64,7 +71,6 @@ function* convertIssue(issue) {
         yield db.topic.insert({title: issue.title, epic_key: issue.key});
     }
     else {
-
         let factIssue = yield db.fact_issue.findOne({issue_id: issue.id});
 
         if (factIssue) {
@@ -79,8 +85,12 @@ function* convertIssue(issue) {
     }
 }
 
+/**
+ * Associate the fact with given epic
+ * @param fact_id
+ * @param epic_key
+ */
 function* addFactToTopic(fact_id, epic_key) {
-
     let topic = yield db.topic.findOne({epic_key: epic_key});
 
     if (!topic) {
@@ -103,6 +113,9 @@ function saveIfNotExists(table, item, query, cb) {
     });
 }
 
+/**
+ * Queues all new issue from JIRA tasks storage to be imported into main database
+ */
 function sync() {
     console.log('syncing issues...');
 

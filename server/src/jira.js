@@ -10,6 +10,10 @@ const apiBaseUrl = 'http://ppab.mplogic.co.uk:8089/rest/api/2/';
 
 const jql = 'http://ppab.mplogic.co.uk:8089/issues/?jql=created>=2015-12-22';
 
+/**
+ * Returns issues with issue key up to specified boundary
+ * @param maxIssueKey
+ */
 function getIssues(maxIssueKey) {
     let filterClause = '';
     if (maxIssueKey) {
@@ -83,6 +87,7 @@ function batchedSearch(jql, cb, startAt, batchSize) {
         if (response.statusCode !== 200) {
             let msg = response.statusCode + ' ' + (body.errorMessages && body.errorMessages[0]);
 
+            console.log(msg);
             //throw msg;
             return;
         }
