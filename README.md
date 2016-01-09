@@ -7,9 +7,14 @@ It requires you to rethink the way you create issues. Instead of "this button sh
 Also documentation starts to reflect current state of the application. So it's becomes visible what part of the app is done and working, what are in progress, what is broken.
 
 ## How to run
+### Install dependecies
+From `client` and `server` folders
+```
+npm install
+```
 
 ### Compile client app
-From `client` folder:
+From `client` folder
 ```
 gulp default
 ```
@@ -19,7 +24,7 @@ gulp default
     C:\mongodb\bin\mongod.exe --dbpath C:\mongodb\bin\data
 ```
 ### Start web server
-From `server` folder:
+From `server` folder
 ```
 npm start
 ```
