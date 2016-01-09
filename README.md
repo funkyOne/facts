@@ -8,12 +8,18 @@ Also documentation starts to reflect current state of the application. So it's b
 
 ## How to run
 
-### Start mongo
+### Compile client app
+From `client` folder:
+```
+gulp default
+```
+
+### Start database server
 ```
     C:\mongodb\bin\mongod.exe --dbpath C:\mongodb\bin\data
 ```
-### Start express server
-from server folder:
+### Start web server
+From `server` folder:
 ```
 npm start
 ```
