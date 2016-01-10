@@ -20,17 +20,19 @@ gulp default
 ```
 
 ### Start database server
+On Windows with default mongo installation
 ```
     C:\mongodb\bin\mongod.exe --dbpath C:\mongodb\bin\data
 ```
+
 ### Start web server
 From `server` folder
 ```
 npm start
 ```
 
-### Go to http://localhost:3000/
+### Oper app URL
+Default development URL is http://localhost:3000/
 
 ## License
-
 Facts is Apache licensed. 
