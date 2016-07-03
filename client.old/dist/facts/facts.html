@@ -1,0 +1,61 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Brand</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a ng-click="vm.addFact()">New fact</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="facts">
+            <div class="btn-group pull-right">
+                <label class="btn btn-primary" ng-model="view" btn-radio="'text'">Text</label>
+                <label class="btn btn-primary" ng-model="view" btn-radio="'all'">All</label>
+                <label class="btn btn-primary" ng-model="view" btn-radio="'implemented'">Implemented</label>
+                <label class="btn btn-primary" ng-model="view" btn-radio="'todo'">To Do</label>
+            </div>
+
+            <div ng-repeat="category in vm.categories track by category.id">
+                <h2>{{category.title}}</h2>
+
+                <div class="fact fact--{{fact.state.title}}" ng-repeat="fact in category.facts track by fact.id | filter:{hidden:'false'}"
+                     ng-mouseover="vm.getDetails(fact)">
+
+                    <div class="fact-edit-btns">
+                        <button class="btn-xs btn btn-danger" ng-click="vm.delete(fact,category)">&times;</button>
+                        <button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">edit</button>
+                        <button class="btn-xs btn btn-primary" ng-click="vm.hide(fact)">hide</button>
+                        <!--<button class="btn-xs btn btn-primary" ng-click="vm.edit(fact)">create issue</button>-->
+                    </div>
+
+                    <span ng-bind-html="vm.makeTrusted(fact.html)"></span>
+
+                    <div class="fact__issues">
+                        <div class="fact__issue fact__issue--{{issue.fields.status.name}}"
+                             ng-repeat="issue in fact.issues">
+                            <a href="{{issue.self}}">{{issue.key}} - {{issue.fields.summary}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
