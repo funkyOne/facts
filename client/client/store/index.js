@@ -1,4 +1,4 @@
-
+import thunkMiddleware from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux'
 
 import { logger } from '../middleware'
@@ -10,7 +10,8 @@ export default function configure(initialState) {
     : createStore
 
   const createStoreWithMiddleware = applyMiddleware(
-    logger
+      thunkMiddleware,
+      logger
   )(create)
 
   const store = createStoreWithMiddleware(rootReducer, initialState)
